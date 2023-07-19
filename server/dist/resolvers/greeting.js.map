@@ -1,0 +1,1 @@
+{"version":3,"file":"greeting.js","sourceRoot":"","sources":["../../src/resolvers/greeting.ts"],"names":[],"mappings":";;;;;;;;;;;;AAGA,+CAAkE;AAK3D,IAAM,gBAAgB,8BAAtB,MAAM,gBAAgB;IAEzB,KAAK;QACD,OAAO,mBAAmB,CAAA;IAC9B,CAAC;CAMJ,CAAA;AARG;IADF,IAAA,oBAAK,EAAC,OAAO,CAAC,EAAE,CAAC,MAAM,CAAC;;;;6CAGrB;2BAJQ,gBAAgB;IAD5B,IAAA,uBAAQ,GAAE;GACE,gBAAgB,CAU5B"}
