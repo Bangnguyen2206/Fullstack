@@ -14,17 +14,26 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-var _a, _b;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserResolver = void 0;
 const type_graphql_1 = require("type-graphql");
 const RegisterInput_1 = require("../types/RegisterInput");
+const LoginInput_1 = require("../types/LoginInput");
 const User_1 = require("../entities/User");
 const argon2_1 = __importDefault(require("argon2"));
 const UserMutationResponse_1 = require("../types/UserMutationResponse");
+const Auth_1 = require("../utils/Auth");
 let UserResolver = exports.UserResolver = class UserResolver {
     async register(registerInput) {
         const { username, password } = registerInput;
+        const existingUser = await User_1.User.findOne({ username: username });
+        if (existingUser) {
+            return {
+                code: 400,
+                success: false,
+                message: 'Duplicated username',
+            };
+        }
         const hashedPassword = await argon2_1.default.hash(password);
         const newUser = await User_1.User.create({
             username,
@@ -40,7 +49,6 @@ let UserResolver = exports.UserResolver = class UserResolver {
     }
     async login({ username, password }, { res }) {
         const existingUser = await User_1.User.findOne({ username });
-        console.log(existingUser);
         if (!existingUser) {
             return {
                 code: 400,
@@ -61,6 +69,7 @@ let UserResolver = exports.UserResolver = class UserResolver {
             success: true,
             message: 'Logged in successfully',
             user: existingUser,
+            accessToken: (0, Auth_1.createToken)('accessToken', existingUser),
         };
     }
 };
@@ -77,7 +86,7 @@ __decorate([
     __param(0, (0, type_graphql_1.Arg)('loginInput')),
     __param(1, (0, type_graphql_1.Ctx)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [typeof (_a = typeof LoginInput !== "undefined" && LoginInput) === "function" ? _a : Object, typeof (_b = typeof Context !== "undefined" && Context) === "function" ? _b : Object]),
+    __metadata("design:paramtypes", [LoginInput_1.LoginInput, Object]),
     __metadata("design:returntype", Promise)
 ], UserResolver.prototype, "login", null);
 exports.UserResolver = UserResolver = __decorate([

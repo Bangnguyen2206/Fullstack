@@ -7,10 +7,12 @@ import {
   Arg,
 } from 'type-graphql'
 import { RegisterInput } from '../types/RegisterInput'
+import { LoginInput } from '../types/LoginInput'
 import { User } from '../entities/User'
 import argon2 from 'argon2'
 import { IMutationResponse } from '../types/MutationResponse'
 import { UserMutationResponse } from '../types/UserMutationResponse'
+import { createToken } from '../utils/Auth'
 
 @Resolver()
 export class UserResolver {
@@ -22,15 +24,14 @@ export class UserResolver {
     registerInput: RegisterInput,
   ): Promise<UserMutationResponse> {
     const { username, password } = registerInput
-    // const existingUser = await User.findOne({ username: username })
-    // console.log(existingUser)
-    // if (existingUser) {
-    //   return {
-    //     code: 400,
-    //     success: false,
-    //     message: 'Duplicated username',
-    //   }
-    // }
+    const existingUser = await User.findOne({ username: username })
+    if (existingUser) {
+      return {
+        code: 400,
+        success: false,
+        message: 'Duplicated username',
+      }
+    }
 
     const hashedPassword = await argon2.hash(password)
     const newUser = await User.create({
@@ -49,10 +50,9 @@ export class UserResolver {
   @Mutation((_return) => UserMutationResponse)
   async login(
     @Arg('loginInput') { username, password }: LoginInput,
-    @Ctx() { res }: Context,
+    @Ctx() { res }: any,
   ): Promise<UserMutationResponse> {
-    const existingUser = await User.findOne({ username })
-    console.log(existingUser)
+    const existingUser = await User.findOne({username})
 
     if (!existingUser) {
       return {
@@ -79,7 +79,7 @@ export class UserResolver {
       success: true,
       message: 'Logged in successfully',
       user: existingUser,
-    //   accessToken: createToken('accessToken', existingUser),
+      accessToken: createToken('accessToken', existingUser),
     }
   }
 }

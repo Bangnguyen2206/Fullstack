@@ -19,6 +19,10 @@ __decorate([
     (0, type_graphql_1.Field)({ nullable: true }),
     __metadata("design:type", User_1.User)
 ], UserMutationResponse.prototype, "user", void 0);
+__decorate([
+    (0, type_graphql_1.Field)({ nullable: true }),
+    __metadata("design:type", String)
+], UserMutationResponse.prototype, "accessToken", void 0);
 exports.UserMutationResponse = UserMutationResponse = __decorate([
     (0, type_graphql_1.ObjectType)({ implements: MutationResponse_1.IMutationResponse })
 ], UserMutationResponse);

@@ -1,19 +1,15 @@
 
-
-// import { checkAuth } from '../middleware/checkAuth'
 import { Ctx, Query, Resolver, UseMiddleware } from 'type-graphql'
-// import { Context } from '../types/Context'
 import { User } from '../entities/User'
+import { checkAuth } from '../middleware/checkAuth'
+import { Context } from '../types/Context'
 
 @Resolver()
 export class GreetingResolver {
-	@Query(_return => String)
-    hello(): string {
-        return 'Hello world henry'
-    }
-	// @UseMiddleware(checkAuth)
-	// async hello(@Ctx() { user }: Context): Promise<string> {
-	// 	const existingUser = await User.findOne(user.userId)
-	// 	return `Hello ${existingUser ? existingUser.username : 'World'}`
-	// }
+  @Query((_return) => String)
+  @UseMiddleware(checkAuth)
+  async hello(@Ctx() { user }: Context): string {
+    const existingUser = await User.findOne(user.userId)
+    return `Hello ${existingUser ? existingUser.username : 'World'}`
+  }
 }
