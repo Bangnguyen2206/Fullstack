@@ -1,19 +1,18 @@
 import { FormEvent, useState } from 'react'
-// import { useNavigate } from 'react-router-dom'
-// import { useRegisterMutation } from '../generated/graphql'
+import { useNavigate } from 'react-router-dom'
+import { useRegisterMutation } from '../gql/graphql'
 
 const Register = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  //   const navigate = useNavigate()
+  const navigate = useNavigate()
 
-  //   const [register, _] = useRegisterMutation()
+  const [register, _] = useRegisterMutation()
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    // event.preventDefault()
-    // await register({ variables: { registerInput: { username, password } } })
-    // navigate('..')
-    console.log(event)
+    event.preventDefault()
+    await register({ variables: { registerInput: { username, password } } })
+    navigate('..')
   }
 
   return (

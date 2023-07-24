@@ -1,4 +1,4 @@
-import { useUsersQuery } from '../generated/graphql'
+import { useUsersQuery } from '../gql/graphql'
 
 export default function Home() {
   const { data, loading } = useUsersQuery({
