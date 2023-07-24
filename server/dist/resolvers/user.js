@@ -24,6 +24,9 @@ const argon2_1 = __importDefault(require("argon2"));
 const UserMutationResponse_1 = require("../types/UserMutationResponse");
 const Auth_1 = require("../utils/Auth");
 let UserResolver = exports.UserResolver = class UserResolver {
+    async users() {
+        return await User_1.User.find();
+    }
     async register(registerInput) {
         const { username, password } = registerInput;
         const existingUser = await User_1.User.findOne({ username: username });
@@ -75,6 +78,11 @@ let UserResolver = exports.UserResolver = class UserResolver {
 };
 __decorate([
     (0, type_graphql_1.Query)((_return) => [User_1.User]),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], UserResolver.prototype, "users", null);
+__decorate([
     (0, type_graphql_1.Mutation)((_return) => UserMutationResponse_1.UserMutationResponse),
     __param(0, (0, type_graphql_1.Arg)('registerInput')),
     __metadata("design:type", Function),

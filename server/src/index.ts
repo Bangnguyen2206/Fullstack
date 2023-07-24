@@ -12,7 +12,7 @@ import {
 } from 'apollo-server-core'
 import { GreetingResolver } from './resolvers/greeting'
 import { UserResolver } from './resolvers/user'
-// import { Context } from './types/Context'
+import { Context } from './types/Context'
 // import refreshTokenRouter from './routes/refreshTokenRouter'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'

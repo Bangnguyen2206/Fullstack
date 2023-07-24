@@ -17,6 +17,9 @@ import { createToken } from '../utils/Auth'
 @Resolver()
 export class UserResolver {
   @Query((_return) => [User])
+  async users(): Promise<User[]>{
+    return await User.find()
+  }
   // Register
   @Mutation((_return) => UserMutationResponse)
   async register(
