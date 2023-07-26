@@ -14,6 +14,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserResolver = void 0;
 const type_graphql_1 = require("type-graphql");
@@ -77,6 +78,24 @@ let UserResolver = exports.UserResolver = class UserResolver {
             accessToken: (0, Auth_1.createToken)('accessToken', existingUser),
         };
     }
+    async logout(userId, { res }) {
+        const existingUser = await User_1.User.findOne(userId);
+        if (!existingUser) {
+            return {
+                code: 400,
+                success: false
+            };
+        }
+        existingUser.tokenVersion += 1;
+        await existingUser.save();
+        res.clearCookie(process.env.REFRESH_TOKEN_COOKIE, {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'lax',
+            path: '/refresh_token'
+        });
+        return { code: 200, success: true };
+    }
 };
 __decorate([
     (0, type_graphql_1.Query)((_return) => [User_1.User]),
@@ -99,6 +118,14 @@ __decorate([
     __metadata("design:paramtypes", [LoginInput_1.LoginInput, Object]),
     __metadata("design:returntype", Promise)
 ], UserResolver.prototype, "login", null);
+__decorate([
+    (0, type_graphql_1.Mutation)(_return => UserMutationResponse_1.UserMutationResponse),
+    __param(0, (0, type_graphql_1.Arg)('userId', _type => type_graphql_1.ID)),
+    __param(1, (0, type_graphql_1.Ctx)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, typeof (_a = typeof Context !== "undefined" && Context) === "function" ? _a : Object]),
+    __metadata("design:returntype", Promise)
+], UserResolver.prototype, "logout", null);
 exports.UserResolver = UserResolver = __decorate([
     (0, type_graphql_1.Resolver)()
 ], UserResolver);

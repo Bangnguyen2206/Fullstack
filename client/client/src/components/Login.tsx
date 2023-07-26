@@ -2,12 +2,14 @@ import { useState, FormEvent } from 'react'
 import { useLoginMutation } from '../gql/graphql'
 import { useNavigate } from 'react-router-dom'
 import JWTManager from '../utils/jwt'
+import { useAuthContext } from '../contexts/AuthContext'
 
 export default function Login() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const navigate = useNavigate()
   const [error, setError] = useState('')
+  const { setIsAuthenticated } = useAuthContext()
 
   const [login, _] = useLoginMutation()
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -18,6 +20,7 @@ export default function Login() {
     if (response.data?.login.success) {
       JWTManager.setToken(response.data.login.accessToken as string)
       navigate('..')
+      setIsAuthenticated(true)
     } else {
       if (response.data?.login.message) setError(response.data.login.message)
     }

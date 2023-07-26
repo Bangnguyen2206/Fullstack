@@ -5,6 +5,7 @@ import {
   UseMiddleware,
   Mutation,
   Arg,
+  ID
 } from 'type-graphql'
 import { RegisterInput } from '../types/RegisterInput'
 import { LoginInput } from '../types/LoginInput'
@@ -86,4 +87,33 @@ export class UserResolver {
       accessToken: createToken('accessToken', existingUser),
     }
   }
+
+  @Mutation(_return => UserMutationResponse)
+	async logout(
+		@Arg('userId', _type => ID) userId: number,
+		@Ctx() { res }: Context
+	): Promise<UserMutationResponse> {
+    
+		const existingUser = await User.findOne(userId)
+
+		if (!existingUser) {
+			return {
+				code: 400,
+				success: false
+			}
+		}
+
+		existingUser.tokenVersion += 1
+
+		await existingUser.save()
+
+		res.clearCookie(process.env.REFRESH_TOKEN_COOKIE as string, {
+			httpOnly: true,
+			secure: true,
+			sameSite: 'lax',
+			path: '/refresh_token'
+		})
+
+		return { code: 200, success: true }
+	}
 }
