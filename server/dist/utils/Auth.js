@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createToken = void 0;
+exports.sendRefreshToken = exports.createToken = void 0;
 const jsonwebtoken_1 = require("jsonwebtoken");
 const createToken = (type, user) => (0, jsonwebtoken_1.sign)({
     userId: user.id,
@@ -10,4 +10,13 @@ const createToken = (type, user) => (0, jsonwebtoken_1.sign)({
     expiresIn: type === 'accessToken' ? '15s' : '60m',
 });
 exports.createToken = createToken;
+const sendRefreshToken = (res, user) => {
+    res.cookie(process.env.REFRESH_TOKEN_COOKIE, (0, exports.createToken)('refreshToken', user), {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none',
+        path: '/refresh_token',
+    });
+};
+exports.sendRefreshToken = sendRefreshToken;
 //# sourceMappingURL=Auth.js.map

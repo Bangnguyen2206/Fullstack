@@ -15,3 +15,16 @@ export const createToken = (type: 'accessToken' | 'refreshToken', user: User) =>
       expiresIn: type === 'accessToken' ? '15s' : '60m',
     },
   )
+
+export const sendRefreshToken = (res: Response, user: User) => {
+  res.cookie(
+    process.env.REFRESH_TOKEN_COOKIE as string,
+    createToken('refreshToken', user),
+    {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+      path: '/refresh_token',
+    },
+  )
+}

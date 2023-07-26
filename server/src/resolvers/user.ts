@@ -13,6 +13,7 @@ import argon2 from 'argon2'
 import { IMutationResponse } from '../types/MutationResponse'
 import { UserMutationResponse } from '../types/UserMutationResponse'
 import { createToken } from '../utils/Auth'
+import {sendRefreshToken} from '../utils/Auth'
 
 @Resolver()
 export class UserResolver {
@@ -75,7 +76,7 @@ export class UserResolver {
       }
     }
 
-    // sendRefreshToken(res, existingUser)
+    sendRefreshToken(res, existingUser)
 
     return {
       code: 200,

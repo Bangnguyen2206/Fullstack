@@ -23,6 +23,7 @@ const User_1 = require("../entities/User");
 const argon2_1 = __importDefault(require("argon2"));
 const UserMutationResponse_1 = require("../types/UserMutationResponse");
 const Auth_1 = require("../utils/Auth");
+const Auth_2 = require("../utils/Auth");
 let UserResolver = exports.UserResolver = class UserResolver {
     async users() {
         return await User_1.User.find();
@@ -67,6 +68,7 @@ let UserResolver = exports.UserResolver = class UserResolver {
                 message: 'Incorrect password',
             };
         }
+        (0, Auth_2.sendRefreshToken)(res, existingUser);
         return {
             code: 200,
             success: true,
